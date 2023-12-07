@@ -1,5 +1,14 @@
 import React, { lazy, Suspense } from "react";
-import { BrowserRouter, Routes, Route, Link, NavLink } from "react-router-dom";
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+  Link,
+  NavLink,
+  useNavigate,
+  useLocation,
+} from "react-router-dom";
+import NotFound from "../pages/PageNotFound";
 
 const Home = lazy(() => import("../pages/Home"));
 const Admin = lazy(() => import("../pages/Admin"));
@@ -10,14 +19,20 @@ const Layout = lazy(() => import("../layouts/Layout"));
 const AdministrationPanel = lazy(() => import("../pages/AdministrationPanel"));
 
 export default function AppRoutes() {
+  const navigate = useNavigate();
+
+  // Function to handle the Admin button click and navigate to the Admin route
+  const handleAdminClick = () => {
+    navigate("/admin");
+  };
   return (
-    <BrowserRouter>
+    <>
       <header>
         <nav>
           <h1>
             <Link to="/">Home</Link>
-            <NavLink to="/admin">Admin</NavLink>
-            <NavLink to="/cart">Cart</NavLink>
+            <button onClick={handleAdminClick}>Admin</button>
+            <Link to="/cart">Cart</Link>
           </h1>
         </nav>
       </header>
@@ -80,9 +95,8 @@ export default function AppRoutes() {
               }
             />
           </Route>
-          
         </Routes>
       </main>
-    </BrowserRouter>
+    </>
   );
 }
