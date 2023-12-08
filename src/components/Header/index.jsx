@@ -2,8 +2,8 @@
 
 import { Button } from "flowbite-react";
 import React from "react";
-import { Link, useNavigate } from "react-router-dom";
-import Admin from "../../pages/Admin";
+import {  useNavigate } from "react-router-dom";
+
 
 export default function Header() {
   const navigate = useNavigate();

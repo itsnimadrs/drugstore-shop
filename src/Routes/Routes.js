@@ -1,14 +1,7 @@
 import React, { lazy, Suspense } from "react";
-import {
-  BrowserRouter,
-  Routes,
-  Route,
-  Link,
-  NavLink,
-  useNavigate,
-  useLocation,
-} from "react-router-dom";
+import { Routes, Route, Link, useNavigate } from "react-router-dom";
 import NotFound from "../pages/PageNotFound";
+// import OrdersTab from "../pages/Orders";
 
 const Home = lazy(() => import("../pages/Home"));
 const Admin = lazy(() => import("../pages/Admin"));
@@ -17,7 +10,9 @@ const FinalizationOrder = lazy(() => import("../pages/FinalizationOrder"));
 const Payment = lazy(() => import("../pages/Payment"));
 const Layout = lazy(() => import("../layouts/Layout"));
 const AdministrationPanel = lazy(() => import("../pages/AdministrationPanel"));
-
+const PriceAndAvailability = lazy(() => import("../pages/Price&Availability"));
+const OrdersTab = lazy(() => import("../pages/Orders"));
+const AdminProducts = lazy(() => import("../pages/AdminProducts"));
 export default function AppRoutes() {
   const navigate = useNavigate();
 
@@ -87,10 +82,34 @@ export default function AppRoutes() {
               }
             />
             <Route
-              path="admin/AdministrationPanel"
+              path="admin/administrationPanel"
               element={
                 <Suspense fallback={<div>Loading...</div>}>
                   <AdministrationPanel />
+                </Suspense>
+              }
+            />
+            <Route
+              path="/admin/administrationPanel/adminHeader/ordersTab"
+              element={
+                <Suspense fallback={<div>Loading...</div>}>
+                  <OrdersTab />
+                </Suspense>
+              }
+            />
+            <Route
+              path="/admin/administrationPanel/adminHeader/priceAndAvailability"
+              element={
+                <Suspense fallback={<div>Loading...</div>}>
+                  <PriceAndAvailability />
+                </Suspense>
+              }
+            />
+            <Route
+              path="/admin/administrationPanel/adminHeader/AdminProducts"
+              element={
+                <Suspense fallback={<div>Loading...</div>}>
+                  <AdminProducts />
                 </Suspense>
               }
             />
