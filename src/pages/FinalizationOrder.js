@@ -1,12 +1,13 @@
 import { Link, Outlet } from "react-router-dom";
-export default function Cart() {
+
+export default function FinalizationOrder() {
   return (
     <div>
       <div>
         <Outlet />
-        <Link to="finalizationOrder"> نهایی کردن سبد خرید</Link>
+        <Link to="payment">پرداخت</Link>
       </div>
-      Cart
+      FinalizationOrder
     </div>
   );
 }
