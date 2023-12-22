@@ -5,14 +5,7 @@ export default function Admin() {
     <>
     <div><LoginForm/>
       </div>
-      <div>
-        <div>
-          <Link to="/">بازگشت به سایت</Link>
-        </div>
-        <div>
-          <Link to="administrationPanel">ورود</Link>
-        </div>
-      </div>
+      
     </>
   );
 }

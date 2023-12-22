@@ -1,7 +1,7 @@
 "use client";
 
 import { Button, Checkbox, Label, TextInput } from "flowbite-react";
-import { Link } from "react-router-dom";
+import { Link , Outlet } from "react-router-dom";
 export default function LoginForm() {
   return (
     <>
@@ -42,6 +42,7 @@ export default function LoginForm() {
         <div className="text-lg underline p-2 flex justify-center">
           <Link to="/">بازگشت به سایت</Link>
         </div>
+        <Outlet/>
       </form>
     </>
   );
