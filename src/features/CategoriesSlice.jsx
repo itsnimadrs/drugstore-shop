@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { allCategoriesRequest } from "./Product/Product-Slice";
+
 const initialState = {
   categories: [],
   selectedCategory: null,
@@ -35,3 +36,4 @@ export const categoriesSlice = createSlice({
   },
 });
 export default categoriesSlice.reducer;
+
