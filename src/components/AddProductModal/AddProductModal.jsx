@@ -11,13 +11,13 @@ export default function AddProductModal(props) {
     name: "",
     category: "",
     description: "",
-    image: null, // Added image field
+    image: null, 
   });
 
   const handleInputChange = (e) => {
     const { name, value, files } = e.target;
     
-    // If it's a file input, use the first selected file
+    
     const file = name === "image" ? files[0] : null;
 
     setFormData((prevData) => ({
@@ -27,10 +27,10 @@ export default function AddProductModal(props) {
   };
 
   const handleSubmit = () => {
-    // Perform API request here
+    
     const formDataToSend = new FormData();
     
-    // Append form data to FormData object
+    
     Object.entries(formData).forEach(([key, value]) => {
       formDataToSend.append(key, value);
     });
@@ -41,9 +41,9 @@ export default function AddProductModal(props) {
       })
         .then((response) => response.json())
         .then((data) => {
-          // Handle the response from the API
+          
           console.log(data);
-          // Close the modal if needed
+        
           setOpenModal(false);
         })
         .catch((error) => {

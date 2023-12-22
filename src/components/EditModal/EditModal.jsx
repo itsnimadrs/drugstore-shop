@@ -10,7 +10,7 @@ export default function EditModal(props) {
   
 
     useEffect(() => {
-        // You can perform any additional actions when the component mounts or updates
+        
       }, []);
 
   return (
