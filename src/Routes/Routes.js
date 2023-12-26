@@ -1,7 +1,8 @@
 import React, { lazy, Suspense } from "react";
-import { Routes, Route, Link, useNavigate } from "react-router-dom";
-import NotFound from "../pages/PageNotFound";
+import { Routes, Route } from "react-router-dom";
+
 // import OrdersTab from "../pages/Orders";
+import PrivateRoute from "../pages/privateRoute";
 
 const Home = lazy(() => import("../pages/Home"));
 const Admin = lazy(() => import("../pages/Admin"));
@@ -14,15 +15,15 @@ const PriceAndAvailability = lazy(() => import("../pages/Price&Availability"));
 const OrdersTab = lazy(() => import("../pages/Orders"));
 const AdminProducts = lazy(() => import("../pages/AdminProducts"));
 export default function AppRoutes() {
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
-  // Function to handle the Admin button click and navigate to the Admin route
-  const handleAdminClick = () => {
-    navigate("/admin");
-  };
+  // // Function to handle the Admin button click and navigate to the Admin route
+  // const handleAdminClick = () => {
+  //   navigate("/admin");
+  // };
   return (
     <>
-      <header>
+      {/* <header>
         <nav>
           <h1>
             <Link to="/">Home</Link>
@@ -30,7 +31,7 @@ export default function AppRoutes() {
             <Link to="/cart">Cart</Link>
           </h1>
         </nav>
-      </header>
+      </header> */}
       <main>
         <Routes>
           <Route
@@ -52,9 +53,11 @@ export default function AppRoutes() {
             <Route
               path="admin"
               element={
-                <Suspense fallback={<div>Loading...</div>}>
-                  <Admin />
-                </Suspense>
+                <PrivateRoute>
+                  <Suspense fallback={<div>Loading...</div>}>
+                    <Admin />
+                  </Suspense>
+                </PrivateRoute>
               }
             />
             <Route
@@ -114,6 +117,7 @@ export default function AppRoutes() {
               }
             />
           </Route>
+          {/* <Route path={HOME_ROUTE} element={Home}></Route> */}
         </Routes>
       </main>
     </>

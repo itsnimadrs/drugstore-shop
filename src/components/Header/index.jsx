@@ -2,8 +2,7 @@
 
 import { Button } from "flowbite-react";
 import React from "react";
-import {  useNavigate } from "react-router-dom";
-
+import { useNavigate } from "react-router-dom";
 
 export default function Header() {
   const navigate = useNavigate();
@@ -26,7 +25,7 @@ export default function Header() {
           <p>سبد خرید</p>
         </Button>
 
-        <Button onClick={() => navigate('/admin')} color="gray">
+        <Button onClick={() => navigate("/admin")} color="gray">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="24"
@@ -41,6 +40,9 @@ export default function Header() {
           </svg>
           <p>ادمین</p>
         </Button>
+        <div className="text-3xl font-bold absolute right-10 text-white">
+       فروشگاه دراگ استور
+        </div>
       </Button.Group>
     </div>
   );

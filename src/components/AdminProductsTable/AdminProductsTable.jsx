@@ -9,9 +9,9 @@ import {
 } from "../../features/Product/Product-Slice";
 import React from "react";
 import { useSearchParams } from "react-router-dom";
-import { PagedProductsRequest } from "../../api/Products";
+
 import BsPagination from "../Bs-pagination/Bs-pagination.tsx";
-import { getCategories,  } from "../../features/CategoriesSlice.jsx";
+
 import EditModal from "../EditModal/EditModal.jsx";
 
 export default function AdminProductsTable() {
@@ -89,10 +89,7 @@ export default function AdminProductsTable() {
                   <React.Fragment>
                     <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
                       <Table.Cell>
-                        {/* <span className="p-2 font-medium text-cyan-600 hover:underline dark:text-cyan-500 cursor-pointer">
-                         
-                         ویرایش
-                        </span> */}
+                        
                         <EditModal/>
                         <span
                           onClick={() => handleDelete(product._id)}
