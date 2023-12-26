@@ -144,7 +144,7 @@ export default function BasicDemo() {
     ];
 
     return (
-        <div className="card flex justify-center">
+        <div className="card flex justify-end">
             <Dropdown value={selectedCity} onChange={(e) => setSelectedCity(e.value)} options={cities} optionLabel="name" 
                 placeholder="دسته بندی" className="w-40 md:w-14rem" />
         </div>

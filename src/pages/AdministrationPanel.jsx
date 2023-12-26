@@ -11,6 +11,7 @@ export default function AdministrationPanel() {
       <AdminHeader/>
       <div className="text-2xl font-bold absolute right-10">پنل مدیریت فروشگاه</div>
       <div><Outlet/></div>
+      
     </div>
   );
 }

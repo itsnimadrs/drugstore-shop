@@ -7,6 +7,8 @@ import { fetchProducts } from "../features/Product/Product-Slice";
 import React from "react";
 import BsPagination from "../components/Bs-pagination/Bs-pagination.tsx";
 import { useSearchParams } from "react-router-dom";
+import { useState } from "react";
+import axios from "axios";
 
 export default function PriceAvailabilityTable() {
   const dispatch = useDispatch();
@@ -15,22 +17,9 @@ export default function PriceAvailabilityTable() {
   const loading = useSelector((state) => state.products.loading);
   const [searchParams, setSearchParams] = useSearchParams({
     page: 1,
-    limit: 4,
+    // limit: 4,
   });
-
-  // const fetchProductsMemo = useMemo(
-  //   () => () => dispatch(fetchProducts()),
-  //   [dispatch]
-  // );
-
-  // useEffect(() => {
-  //   console.log(fetchProductsMemo());
-  // }, [fetchProductsMemo]);
-
-  // useEffect(() => {
-  //   console.log(products);
-  // }, [products]);
-
+  
   useEffect(() => {
     dispatch(fetchProducts(`page=${searchParams.get("page")}&limit=${searchParams.get("limit")}`));
   }, [dispatch]);
@@ -38,6 +27,8 @@ export default function PriceAvailabilityTable() {
   if (loading) {
     return <p>Loading...</p>;
   }
+
+  
   return (
     <>
       <p>{message}</p>
