@@ -1,4 +1,4 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice , createAsyncThunk } from "@reduxjs/toolkit";
 
 
 const initialState = {
@@ -55,4 +55,12 @@ export const AuthSlice = createSlice({
       localStorage.removeItem("refreshToken");
     });
   },
+});
+
+export const login = createAsyncThunk('auth/login', async (credentials) => {
+  const response = await fetch('/login', {
+    method: 'POST',
+    body: JSON.stringify(credentials) 
+  });
+  return response.json(); 
 });

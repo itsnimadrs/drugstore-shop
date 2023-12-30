@@ -1,6 +1,7 @@
 import { Link , Outlet } from "react-router-dom";
 import AdminHeader from "../components/AdminHeaders";
 
+
 export default function AdministrationPanel() {
   return (
     <div className="w-full bg-blue-500 p-2 flex ">

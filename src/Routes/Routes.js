@@ -44,6 +44,8 @@ export default function AppRoutes() {
           >
             <Route
               index
+              path="/"
+              exact
               element={
                 <Suspense fallback={<div>Loading...</div>}>
                   <Home />
