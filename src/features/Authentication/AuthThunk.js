@@ -21,3 +21,20 @@ export const refresh = createAsyncThunk(`auth/refresh-token`, async (data) => {
     throw error.response.message;
   }
 });
+
+export const loginUser = createAsyncThunk(
+  "auth/loginUser",
+  async (data, thunkAPI) => {
+    // const response = await api.post("/auth/login", data);
+    console.log(data);
+    return {
+      token: "sampleToken",
+      refreshToken: "sampleRefreshToken",
+      user: {
+        username: "komijani",
+        firstName: "ali",
+        role: "admin",
+      },
+    };
+  }
+);
