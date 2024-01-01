@@ -5,13 +5,32 @@ import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { BrowserRouter } from "react-router-dom";
 import { Provider } from "react-redux";
-import store from "./hooks/redux/Store";
+
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { PersistGate } from "redux-persist/integration/react";
+import { persistor, store } from "./store";
+
 const root = ReactDOM.createRoot(document.getElementById("root"));
+export const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false,
+      refetchOnReconnect: true,
+      staleTime: 60000,
+      retry: false,
+    },
+  },
+});
+
 root.render(
   <React.StrictMode>
     <BrowserRouter>
-    <Provider store={store}>
-      <App />
+      <Provider store={store}>
+        <PersistGate loading={null} persistor={persistor}>
+          <QueryClientProvider client={queryClient}>
+            <App />
+          </QueryClientProvider>
+        </PersistGate>
       </Provider>
     </BrowserRouter>
   </React.StrictMode>
