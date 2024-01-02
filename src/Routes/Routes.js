@@ -14,6 +14,7 @@ const AdministrationPanel = lazy(() => import("../pages/AdministrationPanel"));
 const PriceAndAvailability = lazy(() => import("../pages/Price&Availability"));
 const OrdersTab = lazy(() => import("../pages/Orders"));
 const AdminProducts = lazy(() => import("../pages/AdminProducts"));
+const ProductDetails = lazy(() => import("../utils/ProductDetails"));
 export default function AppRoutes() {
   // const navigate = useNavigate();
 
@@ -118,6 +119,7 @@ export default function AppRoutes() {
                 </Suspense>
               }
             />
+            <Route path="/ProductDetails" />
           </Route>
           {/* <Route path={HOME_ROUTE} element={Home}></Route> */}
         </Routes>
