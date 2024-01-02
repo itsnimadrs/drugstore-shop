@@ -1,7 +1,7 @@
 import React from "react";
 import { useState, useEffect } from "react";
 
-const ProductDetails = ({ product }) => {
+ const ProductDetails = ({ product }) => {
   const [quantity, setQuantity] = useState(1);
 
   useEffect(() => {
