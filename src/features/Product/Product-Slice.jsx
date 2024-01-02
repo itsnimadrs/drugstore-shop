@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { PagedProductsRequest, deleteProductRequest } from "../../api/Products";
-import axios from "axios";
+// import axios from "axios";
+import { api } from "../../api/http";
 
 const initialState = {
   data: [],
@@ -82,7 +83,7 @@ export const productsSlice = createSlice({
 
 export const allCategoriesRequest = async () => {
   try {
-    const res = await axios.get("http://localhost:8000/api/categories");
+    const res = await api.get("http://localhost:8000/api/categories");
     return res.data.data.categories;
   } catch (error) {
     return Promise.reject(error);
@@ -91,7 +92,7 @@ export const allCategoriesRequest = async () => {
 
 export const categoryByIDRequest = async (id) => {
   try {
-    const res = await axios.get(`http://localhost:8000/api/categories/${id}`);
+    const res = await api.get(`http://localhost:8000/api/categories/${id}`);
     return res.data.data.category;
   } catch (error) {
     return Promise.reject(error);
@@ -100,7 +101,7 @@ export const categoryByIDRequest = async (id) => {
 
 export const SubcategoriesByCategoryRequest = async (id) => {
   try {
-    const res = await axios.get(
+    const res = await api.get(
       `http://localhost:8000/api/subcategories?category=${id}`
     );
     return res.data.data.subcategories;
@@ -111,7 +112,7 @@ export const SubcategoriesByCategoryRequest = async (id) => {
 
 export const subcategoryByIDRequest = async (id) => {
   try {
-    const res = await axios.get(
+    const res = await api.get(
       `http://localhost:8000/api/subcategories/${id}`
     );
     return res.data.data.subcategory;
@@ -122,7 +123,7 @@ export const subcategoryByIDRequest = async (id) => {
 
 export const AllProductsRequest = async () => {
   try {
-    const response = await axios.get("http://localhost:8000/api/products");
+    const response = await api.get("http://localhost:8000/api/products");
     return {
       products: response.data.data.products,
     };
@@ -133,7 +134,7 @@ export const AllProductsRequest = async () => {
 
 export const createProductRequest = async (newProduct) => {
   try {
-    const response = await axios.post(
+    const response = await api.post(
       "http://localhost:8000/api/products",
       newProduct,
       {
