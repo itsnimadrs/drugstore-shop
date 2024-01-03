@@ -15,6 +15,8 @@ const PriceAndAvailability = lazy(() => import("../pages/Price&Availability"));
 const OrdersTab = lazy(() => import("../pages/Orders"));
 const AdminProducts = lazy(() => import("../pages/AdminProducts"));
 const ProductDetails = lazy(() => import("../utils/ProductDetails"));
+const Success = lazy(() => import("../pages/success"));
+const Notsuccess = lazy(() => import("../pages/Notsuccess"));
 export default function AppRoutes() {
   // const navigate = useNavigate();
 
@@ -88,6 +90,22 @@ export default function AppRoutes() {
               }
             />
             <Route
+              path="/cart/finalizationOrder/payment/success"
+              element={
+                <Suspense fallback={<div>Loading...</div>}>
+                  <Success />
+                </Suspense>
+              }
+            />
+            <Route
+              path="/cart/finalizationOrder/payment/Notsuccess"
+              element={
+                <Suspense fallback={<div>Loading...</div>}>
+                  <Notsuccess />
+                </Suspense>
+              }
+            />
+            <Route
               path="admin/administrationPanel"
               element={
                 <Suspense fallback={<div>Loading...</div>}>
@@ -119,7 +137,14 @@ export default function AppRoutes() {
                 </Suspense>
               }
             />
-            <Route path="/ProductDetails" />
+            <Route
+              path="ProductDetails"
+              element={
+                <Suspense fallback={<div>Loading...</div>}>
+                  <ProductDetails />
+                </Suspense>
+              }
+            />
           </Route>
           {/* <Route path={HOME_ROUTE} element={Home}></Route> */}
         </Routes>
