@@ -112,9 +112,7 @@ export const SubcategoriesByCategoryRequest = async (id) => {
 
 export const subcategoryByIDRequest = async (id) => {
   try {
-    const res = await api.get(
-      `http://localhost:8000/api/subcategories/${id}`
-    );
+    const res = await api.get(`http://localhost:8000/api/subcategories/${id}`);
     return res.data.data.subcategory;
   } catch (error) {
     return Promise.reject(error);

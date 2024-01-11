@@ -124,30 +124,65 @@
 //             >
 //               <option>آرایشی بهداشتی</option>
 //               <option>مکمل غذایی</option>
-              
+
 //             </select>
 //           </div>
 //         </div>
 //       </div>
 //     )
 //   }
-  
 
-import React, { useState } from "react";
-import { Dropdown } from 'primereact/dropdown';
+// import React, { useState } from "react";
+// import { Dropdown } from 'primereact/dropdown';
 
-export default function BasicDemo() {
-    const [selectedCity, setSelectedCity] = useState(null);
-    const cities = [
-        { name: 'آرایشی بهداشتی', code: 'NY' },
-        { name: 'مکمل غذایی', code: 'RM' }
-    ];
+// export default function BasicDemo() {
+//     const [selectedCity, setSelectedCity] = useState(null);
+//     const cities = [
+//         { name: 'آرایشی بهداشتی', code: 'NY' },
+//         { name: 'مکمل غذایی', code: 'RM' }
+//     ];
 
-    return (
-        <div className="card flex justify-end">
-            <Dropdown value={selectedCity} onChange={(e) => setSelectedCity(e.value)} options={cities} optionLabel="name" 
-                placeholder="دسته بندی" className="w-40 md:w-14rem" />
-        </div>
-    )
+//     return (
+//         <div className="card flex justify-end">
+//             <Dropdown value={selectedCity} onChange={(e) => setSelectedCity(e.value)} options={cities} optionLabel="name"
+//                 placeholder="دسته بندی" className="w-40 md:w-14rem" />
+//         </div>
+//     )
+// }
+
+"use client";
+
+import { Dropdown } from "flowbite-react";
+import { useState } from "react";
+
+import { CATEGORIES_URL } from "../../api/api";
+import { api } from "../../api/http";
+
+export default function Category({ onChanage, value, array,categoryId }) {
+  const [selected, setSelected] = useState(null);
+
+  // console.log(data)
+
+  return (
+    <Dropdown
+      value={value}
+      onChange={onChanage}
+      label={selected || "انتخاب دسته"}
+      dismissOnClick={true}
+    >
+      {array.map((item, index) => (
+        <Dropdown.Item
+          key={item._id || index}
+          onClick={() => setSelected(item.name)}
+          value={item._id}
+          
+        >
+          {item.name}
+        </Dropdown.Item>
+      ))}
+      {/* <Dropdown.Item onClick={() => setSelected("آرایشی بهداشتی")}>
+        آرایشی بهداشتی
+      </Dropdown.Item> */}
+    </Dropdown>
+  );
 }
-        

@@ -9,7 +9,7 @@ export default function Header() {
   return (
     <div className="bg-blue-500 w-full h-20 flex p-4">
       <Button.Group>
-        <Button color="gray">
+        <Button  onClick={() => navigate("/cart")} color="gray">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="24"
