@@ -1,143 +1,129 @@
-// import React from "react";
-// import { useState, useEffect } from "react";
-// import { Link, Outlet } from "react-router-dom";
+import { Button } from "flowbite-react";
+import { Link, Navigate, useParams } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { Breadcrumb } from "flowbite-react";
+import { BASE_URL } from "../api/api.js";
+import Header from "../components/Header/index.jsx";
+import { useNavigate } from "react-router-dom";
+import { useAppDispatch } from "../hooks.ts";
+import { addToCart } from "./shop/reduxCart.jsx";
 
-// const ProductDetails = ({ product, image }) => {
-//   const [quantity, setQuantity] = useState(1);
-
-//   useEffect(() => {
-//     setQuantity(1);
-//   }, [product]);
-
-//   const handleQuantityChange = (event) => {
-//     const value = parseInt(event.target.value);
-//     if (value < 1) {
-//       setQuantity(1);
-//     } else if (value > product.inventory) {
-//       setQuantity(product.inventory);
-//     } else {
-//       setQuantity(value);
-//     }
-//   };
-//   return (
-//     <>
-//       <div className="w-full flex justify-center">
-//         {/* <h1></h1>
-
-//       {product.inventory > 0 ? (
-//         <>
-//           <img  alt={image} />
-
-//           <div  />
-
-//           <input
-//             type="number"
-
-//           />
-
-//           <button >افزودن به سبد خرید</button>
-//         </>
-//       ) : (
-//         <p>موجود نمی باشد</p>
-//       )} */}
-//       </div>
-//       <div>
-//         <Link to="/"> بازگشت به سایت</Link>
-//       </div>
-//       <Outlet />
-//     </>
-//   );
-// };
-///////////////////////////
-import {
-  QueryClient,
-  QueryClientProvider,
-  useQuery,
-} from "@tanstack/react-query";
-import { PRODUCTS_URL } from "../api/api";
-import { Button } from 'flowbite-react';
-import { useSelector } from "react-redux";
-import { Link, Navigate, Outlet, useParams } from "react-router-dom";
-import ProductDetails from "./ProductDetails";
-import { useState, useEffect } from "react";
-import Header from "../components/Header";
-
-export default function Pcard(shouldNavigate) {
-  const [count, setCount] = useState(1);
+import { useDispatch, useSelector } from "react-redux";
+export default function Pcard() {
   const { id } = useParams();
-  console.log(id);
-  const productId = id;
-  const products = useSelector((state) => state.products.data);
-  const { isPending, error, data } = useQuery({
-    queryKey: ["productById", productId],
-    queryFn: () => fetch(`${PRODUCTS_URL}/${productId}`).then((res) => res.data.product),
-  });
 
-  if (isPending) return "Loading...";
+  const [count, setCount] = useState(1);
+  const navigate = useNavigate();
+  const [product, setProduct] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [productQuantity, setProductQuantity] = useState(1);
+  const dispatch = useDispatch();
+  // const { quantity } = useSelector((state) => state.product || {});
 
-  if (error) return "An error has occurred: " + error.message;
+  useEffect(() => {
+    const fetchData = async () => {
+      setIsLoading(true);
+      try {
+        const response = await fetch(`${BASE_URL}/products/${id}`);
+        if (!response.ok) {
+          throw new Error("Something went wrong");
+        }
+        const data = await response.json();
+        setProduct(data);
+        console.log(data?.data?.product);
+        setIsLoading(false);
+      } catch (error) {
+        setError(error);
+        setIsLoading(false);
+      }
+    };
 
-  console.log(data);
+    fetchData();
+  }, []);
 
-  function increment() {
-    if (count < 100) {
-      setCount(count + 1);
-    }
+  if (isLoading) {
+    return <div>Loading...</div>;
   }
-  function decrement() {
-    if (count > 1) {
-      setCount(count - 1);
-    }
+
+  if (error) {
+    return <div>Error: {error.message}</div>;
   }
+
+  const incrementQuantity = () => {
+    const newQuantity = productQuantity + 1;
+    setProductQuantity(newQuantity);
+  };
+  const decrementQuantity = () => {
+    const newQuantity = productQuantity - 1;
+    if (newQuantity > 0) {
+      setProductQuantity(newQuantity);
+    }
+  };
+
+  // const handleAddToCart = (product) => {
+  //   dispatch(addToCart(product));
+  //   navigate("/Cart");
+  // };
+
+  const handleAddToCart = (product) => {
+    dispatch(addToCart(product));
+    navigate("/cart");
+  };
 
   return (
     <>
-      {/* <Header /> */}
-      {products.map((product) => (
-        <div key={product._id} className="flex flex-col">
+      <Header />
+      {product ? (
+        <div className="flex flex-col overflow-x-hidden">
           <span className="flex gap-8 justify-end -mr-[60rem] mb-10 my-10 bg-slate-200 ">
             <div className="h-[20rem] w-[20rem] flex justify-end m-auto bg-slate-300">
-              {product.images.map((image) => (
-                <img
-                  key={image}
-                  className="w-[20rem] h-[20rem] object-fit flex justify-center m-auto gap-10 "
-                  src={`http://localhost:8000/images/products/images/${image}`}
-                  alt={image}
-                />
-              ))}
+              <img
+                className=""
+                src={`http://localhost:8000/images/products/images/${product?.data?.product?.images[0]}`}
+                alt=""
+              />
             </div>
           </span>
           <div className="flex justify-center -mr-[17rem] -mt-[20rem] mb-[20rem] text-3xl font-bold">
-            {product.name}
+            {product?.data?.product?.name}
           </div>
           <div className="">
-            <div className="flex justify-center -mr-[20rem] -mt-[45rem]">
-              {product.category}
+            <Breadcrumb
+              className="flex justify-center -mt-[18rem] ml-[16rem]"
+              aria-label="Default breadcrumb example"
+            >
+              <Breadcrumb.Item href="#">
+                <div>{product?.data?.product?.category.name}</div>
+              </Breadcrumb.Item>
+              <Breadcrumb.Item href="#">
+                <div>{product?.data?.product?.subcategory?.name}</div>
+              </Breadcrumb.Item>
+            </Breadcrumb>
+
+            <div className="text-2xl font-bold flex justify-center mt-6 -mr-[22rem] my-4">
+              تومان{product?.data?.product?.price}
             </div>
-            <div className="flex justify-center mr-[20rem] -mt-6">
-              {product.subcategory}
-            </div>
-            <div className="text-2xl font-bold flex justify-center mt-12 -mr-[30rem]">
-              تومان {product.price}{" "}
-            </div>
-            <form class="max-w-xs ml-[55rem] mt-8">
+            <form className="max-w-xs block ml-[46rem] ">
               <label
-                for="counter-input"
-                class="block mb-1 font-medium text-gray-900 dark:text-white text-m ml-10"
+                htmlFor="quantity-input"
+                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white ml-10"
               >
-                :تعداد
+                : انتخاب تعداد
               </label>
-              <div class="relative flex items-center">
-              
+              <div className="relative flex items-center max-w-[8rem]">
                 <button
-                  onClick={decrement}
+                  onClick={() =>
+                    setCount((count) => (count > 1 ? count - 1 : count))
+                  }
+                  value="1"
                   type="button"
                   id="decrement-button"
-                  data-input-counter-decrement="counter-input"
-                  class="flex-shrink-0 bg-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600 dark:border-gray-600 hover:bg-gray-200 inline-flex items-center justify-center border border-gray-300 rounded-md h-5 w-5 focus:ring-gray-100 dark:focus:ring-gray-700 focus:ring-2 focus:outline-none"
+                  data-input-counter-decrement="quantity-input"
+                  className="bg-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600 dark:border-gray-600 hover:bg-gray-200 border border-gray-300 rounded-s-lg p-3 h-11 focus:ring-gray-100 dark:focus:ring-gray-700 focus:ring-2 focus:outline-none"
                 >
                   <svg
-                    class="w-2.5 h-2.5 text-gray-900 dark:text-white"
+                    className="w-3 h-3 text-gray-900 dark:text-white"
                     aria-hidden="true"
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
@@ -152,24 +138,35 @@ export default function Pcard(shouldNavigate) {
                     />
                   </svg>
                 </button>
-                <input
+
+                <p
                   type="text"
-                  id="counter-input"
+                  id="quantity-input"
                   data-input-counter
-                  class="flex-shrink-0 text-gray-900 dark:text-white border-0 bg-transparent text-sm font-normal focus:outline-none focus:ring-0 max-w-[2.5rem] text-center"
-                  placeholder=""
-                  value={count}
-                  readOnly
-                />
+                  data-input-counter-min="1"
+                  data-input-counter-max={product?.data?.product?.quantity}
+                  aria-describedby="helper-text-explanation"
+                  class="bg-gray-50 border-x-0 border-gray-300 h-11 text-center text-gray-900 text-sm focus:ring-blue-500 focus:border-blue-500 block w-full py-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  value="1"
+                  readOnly="true"
+                >
+                  {count}
+                </p>
                 <button
-                  onClick={increment}
+                  onClick={() =>
+                    setCount((count) =>
+                      count < product?.data?.product?.quantity
+                        ? count + 1
+                        : count
+                    )
+                  }
                   type="button"
                   id="increment-button"
-                  data-input-counter-increment="counter-input"
-                  class="flex-shrink-0 bg-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600 dark:border-gray-600 hover:bg-gray-200 inline-flex items-center justify-center border border-gray-300 rounded-md h-5 w-5 focus:ring-gray-100 dark:focus:ring-gray-700 focus:ring-2 focus:outline-none"
+                  data-input-counter-increment="quantity-input"
+                  className="bg-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600 dark:border-gray-600 hover:bg-gray-200 border border-gray-300 rounded-e-lg p-3 h-11 focus:ring-gray-100 dark:focus:ring-gray-700 focus:ring-2 focus:outline-none"
                 >
                   <svg
-                    class="w-2.5 h-2.5 text-gray-900 dark:text-white"
+                    className="w-3 h-3 text-gray-900 dark:text-white"
                     aria-hidden="true"
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
@@ -184,16 +181,120 @@ export default function Pcard(shouldNavigate) {
                     />
                   </svg>
                 </button>
-                
               </div>
-             
+              <p
+                id="helper-text-explanation"
+                className="mt-2 text-sm text-gray-500 dark:text-gray-400"
+              >
+                تعداد محصول را وارد نمایید
+              </p>
             </form>
-            <Button className="flex justify-center ml-[30rem] -mt-[3rem]" color="blue">افزودن به سبد خرید</Button>
-            <div className="rtl mt-10 ml-10">{product.description}</div>
+
+            <Button
+              onClick={() => handleAddToCart(product)}
+              className="flex justify-center ml-[30rem] -mt-[4rem] w-[10rem]"
+              color="blue"
+            >
+              افزودن به سبد خرید
+            </Button>
+            <div
+              dangerouslySetInnerHTML={{
+                __html: product?.data?.product?.description,
+              }}
+              className="rtl my-20  ml-10 font-semibold"
+            ></div>
           </div>
         </div>
-      ))}
-      <Link to="/"> بازگشت به سایت</Link>
+      ) : (
+        <p>نا موجود...</p>
+      )}
+      <Link to="/">
+        <Button className="flex justify-center m-auto">بازگشت به سایت</Button>
+      </Link>
     </>
   );
 }
+
+// import { useState, useEffect } from "react";
+// // import { useData } from "../Layout/DataContext";
+// import axios from "axios";
+// import { useParams, useNavigate, Navigate } from "react-router-dom";
+// import { useQuery } from "react-query";
+// import { useData } from "../context/DataContext";
+
+// export default function Pcard() {
+
+// return (
+//     <div className="w-full bg-[#fafafa] flex flex-col border-t border-b gap-8 py-8 border-gray-300">
+//       <div className="w-4/5 border border-gray-300 rounded-sm h-[40px] mx-auto text-[13px] flex items-center pr-3">
+//         خانه / فروشگاه / {productData.name}
+//       </div>
+//       <div className="w-4/5 flex mx-auto bg-white gap-2">
+//         <div className="border border-gray-900 w-1/2 p-1 border-none">
+//           {productData.images.length > 0 && (
+//             <img
+//               src={`http://localhost:8000/images/products/images/${productData.images[0]}`}
+//               className="h-full w-full transition-transform transform hover:scale-110"
+//               alt=""
+//             />
+//           )}
+//         </div>
+//         <div className="flex flex-col w-1/2 items-start">
+//           <h1 className="text-2xl font-bold text-center my-6 text-[17px]">
+//             {productData && productData.name}
+//           </h1>
+//           <div className="flex gap-3">برند: {productData.brand}</div>
+//           <div className="flex flex-col pt-3">
+//             <h1 className="text-[17px] font-bold text-right">مشخصات کالا:</h1>
+//             <ul className="pr-1 pt-2">
+//               <li className="text-[13px] p-1">
+//                 {" "}
+//                 پشتیبانی از شارژ سریع {productData.chargingPower} واتی
+//               </li>
+//               <li className="text-[13px] p-1">مناسب برای انواع گوشی و تبلت</li>
+//               <li className="text-[13px] p-1 ">دارای 2 پورت Type-C و USB-A</li>
+//             </ul>
+//             <p className="font-bold text-red-700 pt-4 text-start ">
+//               {`${productData.price} تومان`}
+//             </p>
+//             <p className="text-green-600 text-[14px] pt-4">
+//               {" "}
+//               موجودی: {productData.quantity || "نامشخص"}
+//             </p>
+//           </div>
+//           <div className="flex items-center justify-center gap-7 ">
+//             <div className="flex items-center gap-2 pt-5">
+//               <button
+//                 className="bg-gray-300"
+// onClick={() =>
+//   setCount((count) =>
+//     count < productData.quantity ? count + 1 : count
+//   )
+//                 }>
+//                 +
+//               </button>
+//               <p className="border border-gray-300 w-[60px] text-center flex justify-center items-center h-[45px]">
+//                 {count}
+//               </p>
+//               <button
+//                 className="bg-gray-300"
+//                 onClick={() =>
+//                   setCount((count) => (count > 1 ? count - 1 : count))
+//                 }>
+//                 -
+//               </button>
+//             </div>
+//             <div className="pt-5">
+//               <button
+//                 onClick={(event) => addToCart(event)}
+//                 className="w-[200px] outline-none  h-[45px] bg-red-500 text-white flex justify-center items-center">
+//                 افزودن به سبد خرید
+//               </button>
+//             </div>
+//           </div>
+//         </div>
+//       </div>
+//       <div className="flex justify-between py-4 px-2 rounded-sm bg-white w-4/5 mx-auto"></div>
+//     </div>
+//   );
+// }
