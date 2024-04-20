@@ -155,10 +155,7 @@
 import { Dropdown } from "flowbite-react";
 import { useState } from "react";
 
-import { CATEGORIES_URL } from "../../api/api";
-import { api } from "../../api/http";
-
-export default function Category({ onChanage, value, array,categoryId }) {
+export default function Category({ onChanage, value, array , categoryId}) {
   const [selected, setSelected] = useState(null);
 
   // console.log(data)
@@ -170,7 +167,7 @@ export default function Category({ onChanage, value, array,categoryId }) {
       label={selected || "انتخاب دسته"}
       dismissOnClick={true}
     >
-      {array.map((item, index) => (
+      {array?.map((item, index) => (
         <Dropdown.Item
           key={item._id || index}
           onClick={() => setSelected(item.name)}

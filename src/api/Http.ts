@@ -1,37 +1,58 @@
 import axios from "axios";
 import { BASE_URL } from "./api";
+import { Store } from "../features/store.ts"; 
+import { refreshTokenThunk } from "../features/auth";
 
-export default  axios.create({baseURL: BASE_URL})
-axios.defaults.baseURL = BASE_URL;
+export const api = axios.create({ baseURL: BASE_URL });
 
-export const axiosPrivate = axios.create({
-    baseURL: BASE_URL,
-    headers: { 'Content-Type': 'application/json' },
-    withCredentials: true
-});
+// Add a request interceptor
+api.interceptors.request.use(
+  function (config) {
+    const state = store.getState();
+    const { accessToken, isLogin } = state.auth;
+    if (isLogin) {
+      config.headers["Authorization"] = `Bearer ${accessToken}`;
+    }
+    return config;
+  },
+  function (error) {
+    return Promise.reject(error);
+  }
+);
 
-export const endpoints = {
-    login: '/api/auth/login',
-    logout: '/api/auth/logout',
-    signup: '/api/auth/signup',
-    token: '/api/auth/token',
-    user: '/api/users/me',
-  };
+// Add a response interceptor
+let isRefreshingToken = false;
 
-  // export async function fetchWrapper(endpoint: string, opts: {
-  //   method: string;
-  //   headers?: { [key: string]: string };
-  //   mode?: string;
-  //   body?: { [key: string]: any } | string;
-  // }) {
-  //   opts.headers = {
-  //     'Access-Control-Allow-Origin': '*',
-  //     'Content-Type': 'application/json',
-  //     ...opts.headers,
-  //   };
-  //   opts.mode = 'cors';
-  //   if (opts.body) {
-  //     opts.body = JSON.stringify(opts.body);
-  //   }
-  //   return fetch(`${BASE_URL}${endpoint}` , opts as RequestInit);
-  // }
+api.interceptors.response.use(
+  function (response) {
+    return response;
+  },
+  async function (error) {
+    const state = store.getState();
+    const refreshToken = state.auth.refreshToken;
+
+    if (error?.response?.status === 401) {
+      const originalRequest = error.config;
+      if (!isRefreshingToken) {
+        isRefreshingToken = true;
+
+        return store
+          .dispatch(refreshTokenThunk({ refreshToken }))
+          .unwrap()
+          .then((data) => {
+            originalRequest.headers[
+              "Authorization"
+            ] = `Bearer ${data.accessToken}`;
+            return api(originalRequest);
+          })
+          .catch((error) => {
+            throw error;
+          })
+          .finally(() => {
+            isRefreshingToken = false;
+          });
+      }
+    }
+    return Promise.reject(error);
+  }
+);

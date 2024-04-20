@@ -10,7 +10,7 @@ export const GetCategoryById = ({ categoryId }) => {
   } = useQuery({
     queryKey: ["panelCategoryData", categoryId],
     queryFn: () =>
-      instance.get(`${CATEGORIES_URL}/${categoryId}`).then((res) => res.data),
+      instance.get(`${CATEGORIES_URL}/${categoryId}`).then((res) => res.data.data),
   });
 
   if (isCategoryPending) return "Loading...";

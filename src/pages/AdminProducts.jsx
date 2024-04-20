@@ -4,10 +4,11 @@ import AdministrationPanel from "./AdministrationPanel";
 import AdminProductsTable from "../components/AdminProductsTable/AdminProductsTable";
 import React from "react";
 import { useState } from "react";
-import AddProductModal from "../components/AddProductModal/AddProductModal";
+// import AddProductModal from "../components/AddProductModal/AddProductModal.jsx";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { api } from "../api/http";
+import { api } from "../api/http.ts";
 import { PRODUCTS_URL } from "../api/api";
+import AddProduct from "../components/modal/AddProduct.jsx";
 
 
 export default function AdminProducts() {
@@ -60,7 +61,7 @@ export default function AdminProducts() {
           مدیریت کالاها
         </div>
 
-        <AddProductModal show={showLogin} onAdd={handleAdd} close={() => setShowLogin(false)} />
+        <AddProduct show={showLogin} onAdd={handleAdd} close={() => setShowLogin(false)} />
         <div></div>
       </div>
      

@@ -3,20 +3,15 @@ import { Table } from "flowbite-react";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchCategories } from "../../features/CategoriesSlice.jsx";
-import {
-  fetchProducts,
-  deleteProduct,
-} from "../../features/Product/Product-Slice";
+
 import React from "react";
 import { useSearchParams } from "react-router-dom";
-import EditModal from "../EditModal/EditModal.jsx";
-import BsPagination from "../Bs-pagination/Bs-pagination.tsx";
-import { Pagination } from "flowbite-react";
-import TodoPagination from "../Bs-pagination/Bs-pagination.tsx";
+import EditModal from "../EditModal/EditModals.jsx";
+import { deleteProduct, fetchProducts } from "../../features/product/Product-Slice.js";
+
 
 export default function AdminProductsTable() {
   const [active, setActive] = useState(1);
-
   const dispatch = useDispatch();
   const products = useSelector((state) => state.products.data);
   const categories = useSelector((state) => state.categories.categories);
@@ -27,7 +22,7 @@ export default function AdminProductsTable() {
   const [filteredData, setFilteredData] = useState(products);
   const [searchParams, setSearchParams] = useSearchParams({
     page: 1,
-    limit: 4,
+    // limit: 4,
   });
 
   const [showLogin, setShowLogin] = useState(false);
@@ -43,7 +38,6 @@ export default function AdminProductsTable() {
   // const indexOfFirstRecord = indexOfLastRecord - recordsPerPage;
   // const currentRecords = data.slice(indexOfFirstRecord, indexOfLastRecord);
   // const nPages = Math.ceil(data.length / recordsPerPage);
-
   //   const [currentPage, setCurrentPage] = useState(1);
   // const [itemsPerPage, setItemsPerPage] = useState(10);
   // const [totalItems, setTotalItems] = useState(0);
@@ -134,9 +128,9 @@ export default function AdminProductsTable() {
                 <span className="sr-only">Edit</span>
               </Table.HeadCell>
             </Table.Head>
-            {products.map((product, index) => {
+            {products?.map((product, index) => {
               const category = categories.find(
-                (cat) => cat.id === product.categoryId
+                (cat) => cat.id === product?.data?.product?.category._id
               );
               return (
                 <Table.Body key={product._id || index} className="divide-y">
@@ -157,7 +151,7 @@ export default function AdminProductsTable() {
                       <Table.Cell>{product.name}</Table.Cell>
                       <Table.Cell>
                         <div className="images">
-                          {product.images.map((image) => (
+                          {product?.images?.map((image) => (
                             <img
                               key={image}
                               className="w-20 h-20"
@@ -175,14 +169,14 @@ export default function AdminProductsTable() {
           </Table>
         ) : null}
       </div>
-      {currentTodos.length > 4 && (
+      {/* {currentTodos.length > 4 && (
         <TodoPagination
           count={products.length}
           paginate={paginate}
           pagesPerPage={pagesPerPage}
           currentPage={currentPage}
         />
-      )}
+      )} */}
     </>
   );
 }

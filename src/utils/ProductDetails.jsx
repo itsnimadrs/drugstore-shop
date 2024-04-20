@@ -1,25 +1,30 @@
-import { Button } from "flowbite-react";
+import { Button, ToastToggle } from "flowbite-react";
 import { Link, Navigate, useParams } from "react-router-dom";
 import React, { useEffect, useState } from "react";
 import { Breadcrumb } from "flowbite-react";
 import { BASE_URL } from "../api/api.js";
 import Header from "../components/Header/index.jsx";
-import { useNavigate } from "react-router-dom";
-import { useAppDispatch } from "../hooks.ts";
-import { addToCart } from "./shop/reduxCart.jsx";
+import { useDispatch } from "react-redux";
+import { Toast } from "flowbite-react";
+import { HiFire } from "react-icons/hi";
 
-import { useDispatch, useSelector } from "react-redux";
 export default function Pcard() {
   const { id } = useParams();
-
   const [count, setCount] = useState(1);
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const [product, setProduct] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [productQuantity, setProductQuantity] = useState(1);
   const dispatch = useDispatch();
-  // const { quantity } = useSelector((state) => state.product || {});
+  // const { data, setData, navigate } = useData();
+  // const [myproducts, setMyProdcuts] = useState([]);
+
+  // const [cart, setCart] = useState([])
+  // const [showCart, setShowCart] = useState(false)
+
+  // const addToCart = (data) => {
+  //   setCart([...cart, { ...data, quantity: count }])
+  // }
 
   useEffect(() => {
     const fetchData = async () => {
@@ -30,6 +35,11 @@ export default function Pcard() {
           throw new Error("Something went wrong");
         }
         const data = await response.json();
+        // const setData = localStorage.setItem('product', JSON.stringify(product));
+        // console.log(id);
+        // const existingProducts = JSON.parse(localStorage.getItem("cart")) || [];
+        // setMyProdcuts(existingProducts);
+        // console.log(existingProducts);
         setProduct(data);
         console.log(data?.data?.product);
         setIsLoading(false);
@@ -46,30 +56,49 @@ export default function Pcard() {
     return <div>Loading...</div>;
   }
 
-  if (error) {
-    return <div>Error: {error.message}</div>;
-  }
-
-  const incrementQuantity = () => {
-    const newQuantity = productQuantity + 1;
-    setProductQuantity(newQuantity);
-  };
-  const decrementQuantity = () => {
-    const newQuantity = productQuantity - 1;
-    if (newQuantity > 0) {
-      setProductQuantity(newQuantity);
-    }
-  };
+  // const addProduct = (product) => {
+  //   const newProducts = {
+  //     ...product,
+  //     count: 1,
+  //   };
+  //   setMyProdcuts((preProducts) => [...preProducts, newProducts]);
+  //   localStorage.setItem("cart", JSON.stringify([...myproducts, newProducts]));
+  // };
 
   // const handleAddToCart = (product) => {
   //   dispatch(addToCart(product));
-  //   navigate("/Cart");
+  //   console.log(product);
+  //   navigate("/cart");
   // };
 
-  const handleAddToCart = (product) => {
-    dispatch(addToCart(product));
-    navigate("/cart");
-  };
+  // Add a new item
+  // const addToCart = () => {
+  //   setItems([...items, `Product ${Date.now()}`]);
+  //   navigate("/cart");
+  // };
+
+  // const addToCart = (event) => {
+  //   event.preventDefault();
+
+  //   if (productData.name && productData.quantity) {
+  //     const newItem = {
+  //       name: productData.name,
+  //       count: count,
+  //       images: productData.images,
+  //       price: productData.price,
+  //       id: productData._id,
+  //     };
+
+  //     setData((prevData) => {
+  //       if (!Array.isArray(prevData)) {
+  //         return [newItem];
+  //       }
+
+  //       return [newItem, ...prevData];
+  //     });
+  //     navigate("/cart");
+  //   }
+  // };
 
   return (
     <>
@@ -79,7 +108,6 @@ export default function Pcard() {
           <span className="flex gap-8 justify-end -mr-[60rem] mb-10 my-10 bg-slate-200 ">
             <div className="h-[20rem] w-[20rem] flex justify-end m-auto bg-slate-300">
               <img
-                className=""
                 src={`http://localhost:8000/images/products/images/${product?.data?.product?.images[0]}`}
                 alt=""
               />
@@ -191,12 +219,13 @@ export default function Pcard() {
             </form>
 
             <Button
-              onClick={() => handleAddToCart(product)}
+              variant={product.data.product.quantity === 0 && "disabled"}
               className="flex justify-center ml-[30rem] -mt-[4rem] w-[10rem]"
               color="blue"
             >
               افزودن به سبد خرید
             </Button>
+
             <div
               dangerouslySetInnerHTML={{
                 __html: product?.data?.product?.description,
@@ -211,90 +240,13 @@ export default function Pcard() {
       <Link to="/">
         <Button className="flex justify-center m-auto">بازگشت به سایت</Button>
       </Link>
+      <Toast>
+        <div className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-cyan-100 text-cyan-500 dark:bg-cyan-800 dark:text-cyan-200">
+          <HiFire className="h-5 w-5" />
+        </div>
+        <div className="ml-3 text-sm font-normal">added to cart.</div>
+        <Toast.Toggle />
+      </Toast>
     </>
   );
 }
-
-// import { useState, useEffect } from "react";
-// // import { useData } from "../Layout/DataContext";
-// import axios from "axios";
-// import { useParams, useNavigate, Navigate } from "react-router-dom";
-// import { useQuery } from "react-query";
-// import { useData } from "../context/DataContext";
-
-// export default function Pcard() {
-
-// return (
-//     <div className="w-full bg-[#fafafa] flex flex-col border-t border-b gap-8 py-8 border-gray-300">
-//       <div className="w-4/5 border border-gray-300 rounded-sm h-[40px] mx-auto text-[13px] flex items-center pr-3">
-//         خانه / فروشگاه / {productData.name}
-//       </div>
-//       <div className="w-4/5 flex mx-auto bg-white gap-2">
-//         <div className="border border-gray-900 w-1/2 p-1 border-none">
-//           {productData.images.length > 0 && (
-//             <img
-//               src={`http://localhost:8000/images/products/images/${productData.images[0]}`}
-//               className="h-full w-full transition-transform transform hover:scale-110"
-//               alt=""
-//             />
-//           )}
-//         </div>
-//         <div className="flex flex-col w-1/2 items-start">
-//           <h1 className="text-2xl font-bold text-center my-6 text-[17px]">
-//             {productData && productData.name}
-//           </h1>
-//           <div className="flex gap-3">برند: {productData.brand}</div>
-//           <div className="flex flex-col pt-3">
-//             <h1 className="text-[17px] font-bold text-right">مشخصات کالا:</h1>
-//             <ul className="pr-1 pt-2">
-//               <li className="text-[13px] p-1">
-//                 {" "}
-//                 پشتیبانی از شارژ سریع {productData.chargingPower} واتی
-//               </li>
-//               <li className="text-[13px] p-1">مناسب برای انواع گوشی و تبلت</li>
-//               <li className="text-[13px] p-1 ">دارای 2 پورت Type-C و USB-A</li>
-//             </ul>
-//             <p className="font-bold text-red-700 pt-4 text-start ">
-//               {`${productData.price} تومان`}
-//             </p>
-//             <p className="text-green-600 text-[14px] pt-4">
-//               {" "}
-//               موجودی: {productData.quantity || "نامشخص"}
-//             </p>
-//           </div>
-//           <div className="flex items-center justify-center gap-7 ">
-//             <div className="flex items-center gap-2 pt-5">
-//               <button
-//                 className="bg-gray-300"
-// onClick={() =>
-//   setCount((count) =>
-//     count < productData.quantity ? count + 1 : count
-//   )
-//                 }>
-//                 +
-//               </button>
-//               <p className="border border-gray-300 w-[60px] text-center flex justify-center items-center h-[45px]">
-//                 {count}
-//               </p>
-//               <button
-//                 className="bg-gray-300"
-//                 onClick={() =>
-//                   setCount((count) => (count > 1 ? count - 1 : count))
-//                 }>
-//                 -
-//               </button>
-//             </div>
-//             <div className="pt-5">
-//               <button
-//                 onClick={(event) => addToCart(event)}
-//                 className="w-[200px] outline-none  h-[45px] bg-red-500 text-white flex justify-center items-center">
-//                 افزودن به سبد خرید
-//               </button>
-//             </div>
-//           </div>
-//         </div>
-//       </div>
-//       <div className="flex justify-between py-4 px-2 rounded-sm bg-white w-4/5 mx-auto"></div>
-//     </div>
-//   );
-// }

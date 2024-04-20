@@ -3,12 +3,11 @@
 import { Table } from "flowbite-react";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchProducts } from "../features/Product/Product-Slice";
+import { fetchProducts } from "../features/product/Product-Slice";
 import React from "react";
 
 import { useSearchParams } from "react-router-dom";
-import { useState } from "react";
-import axios from "axios";
+
 
 export default function PriceAvailabilityTable() {
   const dispatch = useDispatch();

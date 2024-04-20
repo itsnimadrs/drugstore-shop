@@ -1,27 +1,23 @@
 "use client";
 
 import { Button, Modal } from "flowbite-react";
-import { React, useState, useEffect } from "react";
-import BasicDemo from "./categoryInput";
-import {
-  login,
-  refreshAccessToken,
-} from "../../features/Authentication/authService";
-import * as Yup from "yup";
-import { createProductRequest } from "../../api/Products";
-import SubCategory from "./SubCategory";
-import axios from "axios";
-import { v4 as uuid } from "uuid";
-import { api } from "../../api/http";
-import { CATEGORIES_URL, PRODUCTS_URL } from "../../api/api";
-import Category from "./categoryInput";
+import {  useState } from "react";
+import SubCategory from "./SubCategory.jsx";
+
+
+import { CATEGORIES_URL } from "../../api/api.js";
+import Category from "./categoryInput.jsx";
 import { useQuery } from "@tanstack/react-query";
+
+import React from "react";
+import { api } from "../../api/http.ts";
 
 export default function AddProductModal({ onAdd, product, onEdit }) {
   const isEditing = !!product;
-
+  const [selectedCategory, setSelectedCategory] = useState("");
+  const [selectedSubcategory, setSelectedSubcategory] = useState("");
   const [openModal, setOpenModal] = useState(false);
-
+  const [productImages, setProductImages] = useState([]);
   const [pName, setPname] = useState("");
   const [price, setPrice] = useState("");
   const [subcategory, setSubcategory] = useState("");
@@ -29,6 +25,15 @@ export default function AddProductModal({ onAdd, product, onEdit }) {
   const [images, setImage] = useState([]);
   const [description, setDescription] = useState("");
   const [quantity, setQuantity] = useState("");
+
+  const [categories, setCategories] = useState({
+    data: { categories: [] },
+    isLoading: true,
+  });
+  const [subcategories, setSubcategories] = useState({
+    data: { subcategories: [] },
+    isLoading: true,
+  });
 
   const handleDescriptionChange = (event) => {
     setDescription(event.target.value);
@@ -62,15 +67,17 @@ export default function AddProductModal({ onAdd, product, onEdit }) {
     form_data.append(`name`, pName);
     // form_data.append(`brand`, values.brand);
     form_data.append(`price`, price);
-    form_data.append(`category`, category);
     form_data.append(`subcategory`, subcategory);
     form_data.append(`description`, description);
     form_data.append(`quantity`, quantity);
+    form_data.append(`category`, selectedCategory);
+    
 
     // if (thumbnail) form_data.append("thumbnail", thumbnail);
-    if (images) {
-      form_data.append("images", images);
+    for (let i = 0; i < productImages.length; i++) {
+      form_data.append("images", productImages[i]);
     }
+
 
     if (isEditing) {
       onEdit(form_data);
@@ -83,7 +90,7 @@ export default function AddProductModal({ onAdd, product, onEdit }) {
     // })
   };
 
-  const { isPending, error, data , categoryId } = useQuery({
+  const { isPending, error, data  } = useQuery({
     queryKey: ["categoryData"],
     queryFn: () => api.get(`${CATEGORIES_URL}`).then((res) => res.data),
   });
