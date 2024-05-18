@@ -12,7 +12,7 @@ export const fetchProducts = createAsyncThunk(
         page,
       },
     });
-    const productsData = response.data.data.products || [];
+    const productsData = response.data?.data?.products || [];
     return productsData;
   }
 );

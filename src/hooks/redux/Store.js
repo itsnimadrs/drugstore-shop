@@ -9,7 +9,6 @@ import productReducer from "../../utils/shop/productShopSlice";
 
 
 
-
 const persistConfig = {
   key: "root",
   storage,
@@ -22,11 +21,6 @@ export const store = configureStore({
   reducer: persistedReducer,
   cart: cartReducer,
   product: productReducer,
-  // reducer: { 
-  //   categories: CategoriesSlice,
-  //   subcategories: SubcategoriesSlice,
-  //   products: ProductSlice,
-  // },
 
   // ***********for error in log********
   middleware: (getDefaultMiddleware) =>

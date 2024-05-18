@@ -59,7 +59,7 @@ export interface Product {
   
   const getAll = (page: number = 1, limit: number = 5, ofCatId?: string, ofSubCatId?: string) => {
     const filterQuery = ofSubCatId ? `&subcategory=${ofSubCatId}` : ofCatId ? `&category=${ofCatId}` : "";
-    return api.get<GetAllResponse>(`${productEndpoint}?limit=${limit}&page=${page}${filterQuery}`).then(res => res.data);
+    return api.get<GetAllResponse>(`${productEndpoint}?limit=${limit}&page=${page}${filterQuery}`).then(res => res?.data);
   };
   
   const addNew = (product: FormData) => api.post(productEndpoint, product);
@@ -72,7 +72,7 @@ export interface Product {
         throw er;
       });
   
-      const editById = ({ id, product }: EditingData) => api.patch<Product>(`${productEndpoint}/${id}`, product).then(res => res.data);
+      const editById = ({ id, product }: EditingData) => api.patch<Product>(`${productEndpoint}/${id}`, product).then(res => res?.data);
   
   const productServ = {
     getAll,

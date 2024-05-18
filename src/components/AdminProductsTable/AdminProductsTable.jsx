@@ -7,8 +7,10 @@ import { fetchCategories } from "../../features/CategoriesSlice.jsx";
 import React from "react";
 import { useSearchParams } from "react-router-dom";
 import EditModal from "../EditModal/EditModals.jsx";
-import { deleteProduct, fetchProducts } from "../../features/product/Product-Slice.js";
-
+import {
+  deleteProduct,
+  fetchProducts,
+} from "../../features/product/Product-Slice.js";
 
 export default function AdminProductsTable() {
   const [active, setActive] = useState(1);
@@ -180,5 +182,3 @@ export default function AdminProductsTable() {
     </>
   );
 }
-
-

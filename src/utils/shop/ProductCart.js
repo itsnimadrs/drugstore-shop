@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-// import DeleteModal from "../../../modal/shop/cartModal/DeleteCart";
+
 
 const tableStyle = "border-2 border-[#D6B59F] text-[#30373E] text-md px-3 py-1";
 

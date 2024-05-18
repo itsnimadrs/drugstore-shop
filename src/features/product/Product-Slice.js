@@ -1,10 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { PagedProductsRequest, deleteProductRequest } from "../../api/Products.js";
-// import axios from "axios";
-import {api} from "../../api/http.ts";
+import axios from "axios";
 
-
-import { SubCategory } from "../../services/subServ.ts";
 
 const initialState = {
   data: [],
@@ -29,7 +26,7 @@ export const productsSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(fetchProducts.fulfilled, (state, action: any) => {
+      .addCase(fetchProducts.fulfilled, (state, action) => {
         return {
           ...state,
           loading: false,
@@ -39,7 +36,7 @@ export const productsSlice = createSlice({
           message: "products loaded successfully",
         };
       })
-      .addCase(fetchProducts.rejected, (state, action: any) => {
+      .addCase(fetchProducts.rejected, (state, action) => {
         return {
           ...state,
           loading: false,
@@ -54,18 +51,18 @@ export const productsSlice = createSlice({
           message: "loading products",
         };
       })
-      .addCase(deleteProduct.fulfilled, (state, action: any) => {
+      .addCase(deleteProduct.fulfilled, (state, action) => {
         return {
           ...state,
           loading: false,
           error: false,
           data: state.data.filter(
-            (product: any) => product.id !== action.payload.id
+            (product) => product.id !== action.payload.id
           ),
           message: "products deleted successfully",
         };
       })
-      .addCase(deleteProduct.rejected, (state, action: any) => {
+      .addCase(deleteProduct.rejected, (state, action) => {
         return {
           ...state,
           loading: false,
@@ -88,7 +85,7 @@ export const productsSlice = createSlice({
 
 export const allCategoriesRequest = async () => {
   try {
-    const res = await api.get("http://localhost:8000/api/categories");
+    const res = await api.axios.get("http://localhost:8000/api/categories");
     return res.data.data.categories;
   } catch (error) {
     return Promise.reject(error);
@@ -97,7 +94,7 @@ export const allCategoriesRequest = async () => {
 
 export const categoryByIDRequest = async (id) => {
   try {
-    const res = await api.get(`http://localhost:8000/api/categories/${id}`);
+    const res = await api.axios.get(`http://localhost:8000/api/categories/${id}`);
     return res.data.data.category;
   } catch (error) {
     return Promise.reject(error);
@@ -117,7 +114,7 @@ export const SubcategoriesByCategoryRequest = async (id) => {
 
 export const subcategoryByIDRequest = async (id) => {
   try {
-    const res = await api.get(`http://localhost:8000/api/subcategories/${id}`);
+    const res = await api.axios.get(`http://localhost:8000/api/subcategories/${id}`);
     return res.data.data.subcategory;
   } catch (error) {
     return Promise.reject(error);
@@ -126,7 +123,7 @@ export const subcategoryByIDRequest = async (id) => {
 
 export const AllProductsRequest = async () => {
   try {
-    const response = await api.get("http://localhost:8000/api/products");
+    const response = await api.axios.get("http://localhost:8000/api/products");
     return {
       products: response.data.data.products,
     };
