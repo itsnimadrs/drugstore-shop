@@ -8,12 +8,11 @@ import React from "react";
 
 import { useSearchParams } from "react-router-dom";
 
-
 export default function PriceAvailabilityTable() {
   const dispatch = useDispatch();
-  const products = useSelector((state) => state.products.data);
-  const message = useSelector((state) => state.products.message);
-  const loading = useSelector((state) => state.products.loading);
+  const products = useSelector((state) => state.products);
+  const message = useSelector((state) => state.products);
+  const loading = useSelector((state) => state.products);
   const [searchParams, setSearchParams] = useSearchParams({
     page: 1,
     // limit: 4,
@@ -36,7 +35,7 @@ export default function PriceAvailabilityTable() {
       <p>{message}</p>
 
       <div className="overflow-x-auto mb-10">
-        {products.length > 0 ? (
+        {products > 0 ? (
           <Table>
             <Table.Head className="align-middle text-center">
               <Table.HeadCell>موجودی</Table.HeadCell>

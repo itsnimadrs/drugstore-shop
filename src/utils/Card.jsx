@@ -11,7 +11,7 @@ import { addToCart } from "../hooks/redux/cartSlice.js";
 export default function Pcard() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const products = useSelector((state) => state.products.data);
+  const products = useSelector((state) => state.products);
   const { isPending, error } = useQuery({
     queryKey: ["repoData"],
     queryFn: () => fetch(PRODUCTS_URL).then((res) => res.json()),
