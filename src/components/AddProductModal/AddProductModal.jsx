@@ -1,61 +1,113 @@
 "use client";
 
 import { Button, Modal } from "flowbite-react";
-import { useState } from "react";
-import BasicDemo from "./categoryInput";
+import {  useState } from "react";
+import SubCategory from "./SubCategory.jsx";
 
-export default function AddProductModal(props) {
+
+import { CATEGORIES_URL } from "../../api/api.js";
+import Category from "./categoryInput.jsx";
+import { useQuery } from "@tanstack/react-query";
+
+import React from "react";
+import { api } from "../../api/http.ts";
+
+export default function AddProductModal({ onAdd, product, onEdit }) {
+  const isEditing = !!product;
+  const [selectedCategory, setSelectedCategory] = useState("");
+  const [selectedSubcategory, setSelectedSubcategory] = useState("");
   const [openModal, setOpenModal] = useState(false);
+  const [productImages, setProductImages] = useState([]);
+  const [pName, setPname] = useState("");
+  const [price, setPrice] = useState("");
+  const [subcategory, setSubcategory] = useState("");
+  const [category, setCategory] = useState("");
+  const [images, setImage] = useState([]);
+  const [description, setDescription] = useState("");
+  const [quantity, setQuantity] = useState("");
 
-  const [formData, setFormData] = useState({
-    name: "",
-    category: "",
-    description: "",
-    image: null,
+  const [categories, setCategories] = useState({
+    data: { categories: [] },
+    isLoading: true,
+  });
+  const [subcategories, setSubcategories] = useState({
+    data: { subcategories: [] },
+    isLoading: true,
   });
 
-  const handleInputChange = (e) => {
-    const { name, value, files } = e.target;
-
-    const file = name === "image" ? files[0] : null;
-
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: name === "image" ? file : value,
-    }));
+  const handleDescriptionChange = (event) => {
+    setDescription(event.target.value);
   };
 
-  const handleSubmit = () => {
-    const formDataToSend = new FormData();
-
-    Object.entries(formData).forEach(([key, value]) => {
-      formDataToSend.append(key, value);
-    });
-
-    fetch("http://localhost:8000/api/products", {
-      method: "POST",
-      body: formDataToSend,
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        console.log(data);
-
-        setOpenModal(false);
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-      });
+  const handleNameChange = (event) => {
+    setPname(event.target.value);
   };
+
+  const handlePriceChange = (event) => {
+    setPrice(event.target.value);
+  };
+
+  const handleCategoryChange = (event) => {
+    setCategory(event.target.value);
+  };
+  const handleQuantityChange = (event) => {
+    setQuantity(event.target.value);
+  };
+  const handleImageChange = (event) => {
+    setImage(event.target.value);
+  };
+  const handleSubcategoryChange = (event) => {
+    setSubcategory(event.target.value);
+  };
+
+  const handleChange = async (e) => {
+    e.preventDefault();
+
+    let form_data = new FormData();
+    form_data.append(`name`, pName);
+    // form_data.append(`brand`, values.brand);
+    form_data.append(`price`, price);
+    form_data.append(`subcategory`, subcategory);
+    form_data.append(`description`, description);
+    form_data.append(`quantity`, quantity);
+    form_data.append(`category`, selectedCategory);
+    
+
+    // if (thumbnail) form_data.append("thumbnail", thumbnail);
+    for (let i = 0; i < productImages.length; i++) {
+      form_data.append("images", productImages[i]);
+    }
+
+
+    if (isEditing) {
+      onEdit(form_data);
+    } else {
+      onAdd(form_data);
+    }
+
+    // images.forEach((images) => {
+
+    // })
+  };
+
+  const { isPending, error, data  } = useQuery({
+    queryKey: ["categoryData"],
+    queryFn: () => api.get(`${CATEGORIES_URL}`).then((res) => res.data),
+  });
+
+  if (isPending) return "Loading...";
+
+  if (error) return "An error has occurred: " + error.message;
 
   return (
     <>
       <Button className="m-4" onClick={() => setOpenModal(true)}>
         افزودن کالا
       </Button>
-      <Modal show={openModal} onClose={() => setOpenModal(false)}>
-        <Modal.Header>افزودن کالا</Modal.Header>
-        <Modal.Body>
-          <div className="space-y-6">
+      <form>
+        <Modal show={openModal} onClose={() => setOpenModal(false)}>
+          <Modal.Header>افزودن کالا</Modal.Header>
+          <Modal.Body>
             <label
               className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
               htmlFor="file_input"
@@ -63,6 +115,8 @@ export default function AddProductModal(props) {
               بارگذاری عکس
             </label>
             <input
+              value={images}
+              onChange={handleImageChange}
               className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
               id="file_input"
               type="file"
@@ -71,14 +125,33 @@ export default function AddProductModal(props) {
             <div className="mb-6">
               <label
                 htmlFor="default-input"
-                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                className="block my-2 text-sm font-medium text-gray-900 dark:text-white"
               >
                 نام کالا
               </label>
               <input
+                value={pName}
+                onChange={handleNameChange}
                 type="text"
                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
               />
+              <label
+                htmlFor="default-input"
+                className="block my-2 text-sm font-medium text-gray-900 dark:text-white"
+              >
+                مقدار کالا
+              </label>
+              <div>
+                <div className="mb-2 block"></div>
+                <input
+                  value={quantity}
+                  onChange={handleQuantityChange}
+                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  id="base"
+                  type="text"
+                  sizing="md"
+                />
+              </div>
             </div>
             <div className="mb-6">
               <label
@@ -88,6 +161,8 @@ export default function AddProductModal(props) {
                 قیمت
               </label>
               <input
+                value={price}
+                onChange={handlePriceChange}
                 type="number"
                 id="default-input"
                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
@@ -100,37 +175,46 @@ export default function AddProductModal(props) {
               دسته بندی
             </label>
 
-            <BasicDemo />
-          </div>
-          <label
-            htmlFor="default-input"
-            className="block text-sm font-medium text-gray-900 dark:text-white mb-4 w-full"
-          >
-            زیردسته
-          </label>
-          <input
-            type="number"
-            id="default-input"
-            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-          />
-          <div className="mb-6 mt-8">
-            <label
-              htmlFor="large-input"
-              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white my-8"
-            >
-              توضیحات
-            </label>
-            <input
-              type="text"
-              id="large-input"
-              className="block w-full p-4 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 sm:text-md focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 "
+            <Category
+              value={category}
+              array={data.data.categories}
+              onchange={handleCategoryChange}
             />
-          </div>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button onClick={handleSubmit}>ذخیره</Button>
-        </Modal.Footer>
-      </Modal>
+
+            <label
+              htmlFor="default-input"
+              className="block text-sm font-medium text-gray-900 dark:text-white mb-4 w-full my-8"
+            >
+              زیردسته
+            </label>
+            <SubCategory
+              value={subcategory}
+              onchange={handleSubcategoryChange}
+            />
+
+            <div className="mb-6 mt-8">
+              <label
+                htmlFor="large-input"
+                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white my-8"
+              >
+                توضیحات
+              </label>
+              <input
+                value={description}
+                onChange={handleDescriptionChange}
+                type="text"
+                id="large-input"
+                className="block w-full p-4 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 sm:text-md focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 "
+              />
+            </div>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button type="submit" onClick={handleChange}>
+              ذخیره
+            </Button>
+          </Modal.Footer>
+        </Modal>
+      </form>
     </>
   );
 }

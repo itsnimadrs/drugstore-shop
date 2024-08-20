@@ -28,3 +28,43 @@ export const deleteProductRequest = async (id) => {
     };
   }
 };
+
+const API_URL = "/api/products/";
+
+export const getProducts = async () => {
+  const response = await axios.get(API_URL);
+  return response.data;
+};
+
+export const addProduct = async (productData, token) => {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+
+  const response = await axios.post(API_URL, productData, config);
+  return response.data;
+};
+
+export const createProductRequest = async (newProduct, token) => {
+  try {
+    const response = await axios.post(
+      "http://localhost:8000/api/products",
+      newProduct,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          "Authorization": `Bearer ${token.accessToken}` 
+        }
+      }
+    )
+    console.log(response.data.data.product);
+    return {
+      product: response.data.data.product,
+    };
+  } catch (error) {
+    console.error("Error creating product:", error.response.data);
+    return Promise.reject(error);
+  }
+};

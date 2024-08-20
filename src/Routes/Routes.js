@@ -6,7 +6,7 @@ import PrivateRoute from "../pages/privateRoute";
 
 const Home = lazy(() => import("../pages/Home"));
 const Admin = lazy(() => import("../pages/Admin"));
-const Cart = lazy(() => import("../pages/Cart"));
+const Cart = lazy(() => import("../pages/Cart.js"));
 const FinalizationOrder = lazy(() => import("../pages/FinalizationOrder"));
 const Payment = lazy(() => import("../pages/Payment"));
 const Layout = lazy(() => import("../layouts/Layout"));
@@ -14,6 +14,11 @@ const AdministrationPanel = lazy(() => import("../pages/AdministrationPanel"));
 const PriceAndAvailability = lazy(() => import("../pages/Price&Availability"));
 const OrdersTab = lazy(() => import("../pages/Orders"));
 const AdminProducts = lazy(() => import("../pages/AdminProducts"));
+const ProductDetails = lazy(() => import("../utils/ProductDetails.jsx"));
+const Success = lazy(() => import("../pages/success"));
+const Notsuccess = lazy(() => import("../pages/Notsuccess"));
+const WaitingOrder = lazy(() => import("../pages/WaitingOrder.tsx"));
+const DeliveredOrder = lazy(() => import("../pages/DeliveredOrder.tsx"));
 export default function AppRoutes() {
   // const navigate = useNavigate();
 
@@ -44,6 +49,8 @@ export default function AppRoutes() {
           >
             <Route
               index
+              path="/"
+              exact
               element={
                 <Suspense fallback={<div>Loading...</div>}>
                   <Home />
@@ -85,6 +92,22 @@ export default function AppRoutes() {
               }
             />
             <Route
+              path="/cart/finalizationOrder/payment/success"
+              element={
+                <Suspense fallback={<div>Loading...</div>}>
+                  <Success />
+                </Suspense>
+              }
+            />
+            <Route
+              path="/cart/finalizationOrder/payment/Notsuccess"
+              element={
+                <Suspense fallback={<div>Loading...</div>}>
+                  <Notsuccess />
+                </Suspense>
+              }
+            />
+            <Route
               path="admin/administrationPanel"
               element={
                 <Suspense fallback={<div>Loading...</div>}>
@@ -101,6 +124,22 @@ export default function AppRoutes() {
               }
             />
             <Route
+              path="/admin/administrationPanel/adminHeader/ordersTab/WaitingOrder"
+              element={
+                <Suspense fallback={<div>Loading...</div>}>
+                  <WaitingOrder />
+                </Suspense>
+              }
+            />
+            <Route
+              path="/admin/administrationPanel/adminHeader/ordersTab/DeliveredOrder"
+              element={
+                <Suspense fallback={<div>Loading...</div>}>
+                  <DeliveredOrder />
+                </Suspense>
+              }
+            />
+            <Route
               path="/admin/administrationPanel/adminHeader/priceAndAvailability"
               element={
                 <Suspense fallback={<div>Loading...</div>}>
@@ -113,6 +152,14 @@ export default function AppRoutes() {
               element={
                 <Suspense fallback={<div>Loading...</div>}>
                   <AdminProducts />
+                </Suspense>
+              }
+            />
+            <Route
+              path="ProductDetails/:id"
+              element={
+                <Suspense fallback={<div>Loading...</div>}>
+                  <ProductDetails />
                 </Suspense>
               }
             />

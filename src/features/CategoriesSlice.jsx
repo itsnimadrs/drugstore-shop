@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { allCategoriesRequest } from "./Product/Product-Slice";
+import { allCategoriesRequest } from "../features/product/Product-Slice";
 
 const initialState = {
   categories: [],

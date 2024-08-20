@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { SubcategoriesByCategoryRequest } from "./Product/Product-Slice";
+import { SubcategoriesByCategoryRequest } from "./Product/Product-Slice.ts";
 const initialState = {
   subcategories: [],
   selectedSubcategory: null,

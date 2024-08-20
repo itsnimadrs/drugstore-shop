@@ -14,7 +14,7 @@ const Users = () => {
 
         const getUsers = async () => {
             try {
-                const response = await axiosPrivate.get('/login', {
+                const response = await axiosPrivate.get('/Admin', {
                     signal: controller.signal
                 });
                 console.log(response.data);
